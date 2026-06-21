@@ -1,0 +1,8 @@
+streamlit
+openai
+chardet
+EbookLib
+beautifulsoup4
+pdfplumber
+langchain
+langgraph
