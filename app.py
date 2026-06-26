@@ -46,7 +46,7 @@ if st.session_state.parsed_data:
     book_title = parsed_data['base_info']['title']
     chapters = parsed_data['chapters']
     total_chap = len(chapters)
-    agent = ScriptAdaptationAgent(api_key, model_choice)
+    agent = ScriptAdaptationAgent(api_key=api_key, model_name=model_name, book_title=current_book_title)
     
     st.markdown("---")
     st.markdown(f"### 📑 《{book_title}》 剧本改编控制台")

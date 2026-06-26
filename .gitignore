@@ -1,0 +1,15 @@
+# 忽略虚拟环境
+venv/
+env/
+
+# 忽略本地生成的剧本文档和缓存
+output/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# 忽略临时测试的小说原著文件
+*.txt
+*.epub
+*.pdf
+!requirements.txt
