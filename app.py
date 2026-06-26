@@ -33,6 +33,7 @@ uploaded_file = st.file_uploader("1. 请上传您的小说原著", type=['txt', 
 
 if uploaded_file is not None:
     file_type = uploaded_file.name.split('.')[-1].lower()
+    current_book_title = uploaded_file.name.split('.')[0]
     if st.button("🚀 启动统一解析引擎"):
         with st.spinner(f"正在对 {file_type.upper()} 格式进行智能切分..."):
             file_bytes = uploaded_file.read()
@@ -46,7 +47,7 @@ if st.session_state.parsed_data:
     book_title = parsed_data['base_info']['title']
     chapters = parsed_data['chapters']
     total_chap = len(chapters)
-    agent = ScriptAdaptationAgent(api_key=api_key, model_name=model_name, book_title=current_book_title)
+    agent = ScriptAdaptationAgent(api_key, model_choice,current_book_title)
     
     st.markdown("---")
     st.markdown(f"### 📑 《{book_title}》 剧本改编控制台")
@@ -123,7 +124,8 @@ if st.session_state.parsed_data:
                     break 
                 
                 saved_file_path = agent.append_to_local_file(book_title, chapter_title, script_content)
-                script_display.text_area(f"✅ 最新剧本：{chapter_title}", script_content, height=450)
+                # 给剧本展示区也加一个动态 key，防患于未然
+                script_display.text_area(f"✅ 最新剧本：{chapter_title}", script_content, height=450, key=f"script_display_{i}")
                 
                 status_text.markdown(f"**🧠 更新设定存档:** `{chapter_title}` ({i+1}/{total_tasks})...")
                 st.session_state.global_setting = agent.update_global_setting(
@@ -131,7 +133,8 @@ if st.session_state.parsed_data:
                 )
                 agent.save_setting_checkpoint(book_title, st.session_state.global_setting) 
                 
-                setting_display.text_area("🔄 进化后的全局设定", st.session_state.global_setting, height=450)
+                # 🚨 核心修复：把 key 改为 f-string，拼入变量 {i}
+                setting_display.text_area("🔄 进化后的全局设定", st.session_state.global_setting, height=450, key=f"unique_global_setting_display_{i}")
                 
                 progress_bar.progress((i + 1) / total_tasks)
                 time.sleep(2) 

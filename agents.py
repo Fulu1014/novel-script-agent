@@ -42,7 +42,7 @@ ADAPTATION_PROMPT = """你是一个拥有三十年经验的顶级影视编剧，
 """
 
 # ==========================================
-# 核心 Agent 类 (结合强壮的 HTTP 客户端与数据隔离的 FAISS)
+# 核心 Agent 类
 # ==========================================
 class ScriptAdaptationAgent:
     def __init__(self, api_key: str, model_name: str, book_title: str):
@@ -50,9 +50,9 @@ class ScriptAdaptationAgent:
         self.model_name = model_name
         self.book_title = book_title
         
-        # 🚨 底层网络接管：禁用系统代理并设置 120 秒超时
+        # 自定义底层网络客户端：设置 120 秒超时防止长文本生成时断连
+        # (已移除强行绕过代理的 trust_env=False，使用时请确保已手动关闭科学上网)
         custom_http_client = httpx.Client(
-            proxies=None,  
             timeout=httpx.Timeout(timeout=120.0, connect=30.0) 
         )
         
